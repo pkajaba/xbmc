@@ -127,7 +127,7 @@ Check: play a DTS:X title (DTS-HD MA or HRA with the X extension, 48 kHz) with d
 ## 7. Known limits and where to report
 
 - 48 kHz DTS:X streams only. Anything else uses normal passthrough or decoding.
-- Fold-downs are off, and IMAX Enhanced object content is not converted to objects.
+- Fold-downs are off. Objects are authored for both DTS:X profiles (plain and IMAX Enhanced), but whether a sound bar renders them, and the heights, is not verified yet.
 - About 87 ms of latency; set Kodi's audio offset (about +87 ms to start with) and measure.
 - The only tested box is one S922X. Nothing is guaranteed on other hardware.
 - Not compiled as part of an official CoreELEC build yet.
