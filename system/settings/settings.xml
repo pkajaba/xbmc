@@ -3949,6 +3949,25 @@
           </dependencies>
           <control type="toggle" />
         </setting>
+        <setting id="audiooutput.transcodedstx" type="boolean" label="39380" help="39381">
+          <level>1</level>
+          <default>false</default>
+          <dependencies>
+            <dependency type="visible">
+              <and>
+                <condition on="property" name="aesettingvisible" setting="audiooutput.config">audiooutput.truehdpassthrough</condition>
+                <condition on="property" name="aesettingvisible" setting="audiooutput.passthroughdevice">audiooutput.truehdpassthrough</condition>
+              </and>
+            </dependency>
+            <dependency type="enable">
+              <and>
+                <condition setting="audiooutput.passthrough" operator="is">true</condition>
+                <condition setting="audiooutput.truehdpassthrough" operator="is">true</condition>
+              </and>
+            </dependency>
+          </dependencies>
+          <control type="toggle" />
+        </setting>
         <setting id="audiooutput.dtshdpassthrough" type="boolean" label="347" help="36370">
           <level>1</level>
           <default>false</default>

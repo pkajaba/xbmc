@@ -33,6 +33,7 @@
 #if defined(TARGET_LINUX) && !defined(TARGET_ANDROID)
 // Built for Linux only - see Audio/CMakeLists.txt.
 #include "Audio/DVDAudioCodecOmniphony.h"
+#include "Audio/DVDAudioCodecDtsToAtmos.h"
 #endif
 
 #include <mutex>
@@ -256,6 +257,25 @@ std::unique_ptr<CDVDAudioCodec> CDVDFactoryCodec::CreateAudioCodec(
     // log that ends in "ff-aac" can be read for whether binaural was skipped
     // before it was tried or gave up after.
     CLog::Log(LOGDEBUG, "CDVDFactoryCodec: binaural is on but the codec did not open this stream");
+  }
+
+  // Real-time DTS:X to Dolby Atmos transcode for receivers/soundbars without DTS:X
+  if (allowpassthrough &&
+      hint.codec == AV_CODEC_ID_DTS &&
+      (hint.profile == AV_PROFILE_DTS_HD_MA_X ||
+       hint.profile == AV_PROFILE_DTS_HD_HRA_X ||
+       hint.profile == AV_PROFILE_DTS_HD_MA_X_IMAX) &&
+      CServiceBroker::GetSettingsComponent() &&
+      CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+          CSettings::SETTING_AUDIOOUTPUT_TRANSCODE_DTSX) &&
+      CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
+          CSettings::SETTING_AUDIOOUTPUT_TRUEHDPASSTHROUGH))
+  {
+    auto dtsx2atmos = std::make_unique<CDVDAudioCodecDtsToAtmos>(processInfo);
+    if (dtsx2atmos->Open(hint, options))
+    {
+      return dtsx2atmos;
+    }
   }
 #endif
 

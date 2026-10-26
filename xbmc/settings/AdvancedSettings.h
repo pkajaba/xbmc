@@ -448,6 +448,10 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
 
     std::string m_dvCustomVsvdb; // Raw colon-separated VSVDB hex string from advancedsettings.xml, e.g. "EB:01:46:D0:..."
 
+    std::string m_dtsx2AtmosKey; // HMAC key for signing OAMD Atmos metadata from advancedsettings.xml
+    const std::string& GetDtsx2AtmosKey() const { return m_dtsx2AtmosKey; }
+    void SetDtsx2AtmosKey(const std::string& key) { m_dtsx2AtmosKey = key; }
+
   private:
     void Initialize();
     void Clear();

@@ -665,15 +665,23 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
   printer.SetLineBreak("\n");
   printer.SetIndent("  ");
   advancedXMLCopy.Accept(&printer);
-  // redact User/pass in URLs
+  // redact User/pass in URLs and dtsx2atmoskey
   std::regex redactRe("(\\w+://)\\S+:\\S+@");
-  CLog::Log(LOGINFO, "Contents of {} are...\n{}", file,
-            std::regex_replace(printer.CStr(), redactRe, "$1USERNAME:PASSWORD@"));
+  // The element may carry attributes or a CDATA section, or be empty with the
+  // value in an attribute: drop everything between the tags, and the
+  // attributes of a self-closing form.
+  std::regex redactKeyRe("<dtsx2atmoskey(\\s[^>]*[^/>])?>[\\s\\S]*?</dtsx2atmoskey\\s*>");
+  std::regex redactKeySelfRe("<dtsx2atmoskey\\b[^>]*/>");
+  std::string loggedXML = std::regex_replace(printer.CStr(), redactRe, "$1USERNAME:PASSWORD@");
+  loggedXML = std::regex_replace(loggedXML, redactKeyRe, "<dtsx2atmoskey>REDACTED</dtsx2atmoskey>");
+  loggedXML = std::regex_replace(loggedXML, redactKeySelfRe, "<dtsx2atmoskey>REDACTED</dtsx2atmoskey>");
+  CLog::Log(LOGINFO, "Contents of {} are...\n{}", file, loggedXML);
 
   TiXmlElement *pElement = pRootElement->FirstChildElement("audio");
   if (pElement)
   {
     XMLUtils::GetString(pElement, "defaultplayer", m_audioDefaultPlayer);
+    XMLUtils::GetString(pElement, "dtsx2atmoskey", m_dtsx2AtmosKey);
     // 101 on purpose - can be used to never automark as watched
     XMLUtils::GetFloat(pElement, "playcountminimumpercent", m_audioPlayCountMinimumPercent, 0.0f, 101.0f);
 
@@ -1515,6 +1523,7 @@ void CAdvancedSettings::Clear()
   m_discStubExtensions.clear();
 
   m_userAgent.clear();
+  m_dtsx2AtmosKey.clear();
 }
 
 void CAdvancedSettings::GetCustomTVRegexps(TiXmlElement *pRootElement, SETTINGS_TVSHOWLIST& settings)

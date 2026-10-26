@@ -24745,6 +24745,18 @@ msgctxt "#39302"
 msgid "to profile 8.1"
 msgstr ""
 
+#. Convert DTS:X to Dolby Atmos setting
+#: system/settings/settings.xml
+msgctxt "#39380"
+msgid "Convert DTS:X to Dolby Atmos"
+msgstr ""
+
+#. Help text for Convert DTS:X to Dolby Atmos
+#: system/settings/settings.xml
+msgctxt "#39381"
+msgid "Real-time convert DTS:X streams to Dolby TrueHD for receivers or soundbars without DTS:X support. Streams that carry DTS:X extension audio also get Dolby Atmos object metadata. If an HMAC key is configured in advancedsettings.xml (<dtsx2atmoskey>), that metadata is signed; nothing else is added."
+msgstr ""
+
 # 40000 to 40800 are reserved for Video Versions feature
 
 #. Generic video versions label (plural)
